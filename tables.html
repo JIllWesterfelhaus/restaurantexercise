@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hot Restaurant</title>
+    <!-- Latest compiled and minified CSS & JS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <div class="container">
+        <div class="jumbotron text-center">
+            <h1 class=""><i class="fa fa-fire" aria-hidden="true"></i> Hot Restaurant</h1>
+            <hr>
+            <h2 class="mb-4">Current Reservations and Waiting List</h2>
+            <a href="/reserve"><button class="btn btn-primary btn-lg"><span class="fa fa-table"></span> Make
+                    Reservation</button></a>
+            <a href="/"><button class="btn btn-outline btn-lg"><span class="fa fa-home"></span></button></a>
+        </div>
+        <!-- MAKE RESERVATION -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mt-2">Current Reservations</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul id="tableList" class="list-group"></ul>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4 class="mt-2">Waiting List</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul id="waitList" class="list-group"></ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <p><a href="/api/tables">API Table Link</a> | <a
+                href="/api/waitlist">API Wait List</a></p>
+    </div>
+    <script>
+        // GET TABLES
+        $.get("/api/tables", function (tables) {
+            tables.forEach((table, i) => {
+                let block = `<li class="list-group-item mt-4">
+                            <h2>Table #${i + 1}</h2>
+                            <hr>
+                            <h2>ID: ${table.id}</h2>
+                            <h2>Name: ${table.name}</h2>
+                            <h2>Email: ${table.email}</h2>
+                            <h2>Phone: ${table.number}</h2>         
+                        </li>`
+                $("#tableList").append(block);
+            });
+        });
+        //  GET WAITLIST
+        $.get("/api/waitlist", function (waitlist) {
+            waitlist.forEach((item, i) => {
+                let block = `<li class="list-group-item mt-4">
+                            <h2>Table #${i + 1}</h2>
+                            <hr>
+                            <h2>ID: ${item.id}</h2>
+                            <h2>Name: ${item.name}</h2>
+                            <h2>Email: ${item.email}</h2>
+                            <h2>Phone: ${item.number}</h2>            
+                        </li>`
+                $("#waitList").append(block);
+            })
+        });
+        // CLEAR TABLE
+        $("#clear-btn").on("click", function (e) {
+            e.preventDefault();
+            $.get("api/clear", function(tables) {
+                alert("Clearing tables...");
+                $("#tableList").empty();
+            })
+    });
+    </script>
+</body>
+
+</html>
